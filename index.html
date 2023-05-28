@@ -34,7 +34,7 @@
         <form id="form">
             
             <label>Sorting Algorithm</label>
-            <select id="algorithm" onchange="algorithm=this.value">
+            <select id="algorithm"">
                 <option value="bubble">Bubble Sort</option>
                 <option value="insertion">Insertion Sort</option>
                 <option value="selection">Selection Sort</option>
@@ -84,6 +84,7 @@
             let red_idxs = []
             let algorithm = ""
             let counter = 0
+            let sorted = true
 
             for (let i = 0; i < HEIGHT; i++) {
                 main_array[i] = i
@@ -119,21 +120,36 @@
             shuffle_btn.addEventListener("click",(event)=>{
                 event.preventDefault();
                 algorithm = "shuffle";
-                console.log("ya")
             })
 
+            sort_btn.addEventListener("click",(event)=>{
+                event.preventDefault();
+                algorithm=algorithm_DOM.value
+            })
+            
+            // Main process
             function draw(){
-                // main function
                 clear()
                 draw_main(main_array,red_idxs)
 
                 if (algorithm == "shuffle") {
                     shuffle()
                 }
+                if(!sorted){
+                    if(algorithm == "bubble"){
+                        for(let n=0; n<1000;n++) bubble()
+                    }
+                }
+
+
+
+
+                comparison_DOM.innerText = num_of_comparisons
             }
 
             // algorithms
             function shuffle(){
+                sorted = false
                 red_idxs = []
 
                     for(let i =0; i<100; i++){
@@ -152,6 +168,36 @@
                     }
             }
 
+            // bubble sort
+            // variables needed
+            let i=0, last_item = main_array.length-1
+            let swaps_num = 0
+
+            function bubble(){
+                console.log(i)
+                if(i >= last_item){
+                    i=0;
+                    num_of_comparisons += 1
+
+                    if(swaps_num == 0){
+                        sorted = true
+                        last_item = main_array.length-1
+
+                    }else{
+                        last_item -=1
+                    }
+                    swaps_num =0
+
+                }
+                if(main_array[i] > main_array[i+1])
+                {
+                    swap(main_array,i,i+1)
+                    swaps_num += 1
+                    num_of_comparisons += 1
+                }
+                i+=1
+                red_idxs = [i,i+1]
+            }
             setInterval(draw, 100);
         </script>
     </body>
