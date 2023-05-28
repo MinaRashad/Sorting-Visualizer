@@ -3,7 +3,156 @@
     <head>
         <meta charset="utf-8">
         <title>Sorting Visualizer</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+            }
+
+            #canvs{
+                position: absolute;
+                right: 10%;
+                top: 0;
+                border: 0.1vw gray solid;
+            }
+
+            #form, button, select{
+                margin: 1vw;
+                font-size: 2vw;
+            }
+            button{
+                padding-left: 2vw;
+                padding-right: 2vw;
+                padding-top: 1vw;
+                padding-bottom: 1vw;
+
+            }
+        </style>
     </head>
     <body>
+        <div>
+        <form id="form">
+            
+            <label>Sorting Algorithm</label>
+            <select id="algorithm" onchange="algorithm=this.value">
+                <option value="bubble">Bubble Sort</option>
+                <option value="insertion">Insertion Sort</option>
+                <option value="selection">Selection Sort</option>
+                <option value="merge">Merge Sort</option>
+                <option value="quick">Quick Sort</option>
+                <option value="heap">Heap Sort</option>
+                <option value="radix">Radix Sort (Binary)</option>
+            </select><br>
+            <button id="shuffle">
+                Shuffle
+            </button>
+            <button id="sort">
+                Sort!
+            </button>
+        </form>
+        <div>
+            comparison: <span id="comparisons">0</span> 
+        </div>
+    </div>
+            <canvas id="canvs">
+
+            </canvas>
+        <script>
+
+            let canvs = document.getElementById("canvs");
+            let ctx = canvs.getContext("2d");
+
+            const WIDTH = Math.min(window.innerHeight,window.innerWidth);
+            const HEIGHT = WIDTH;
+
+            canvs.width = WIDTH;
+            canvs.height = HEIGHT;
+            clear()
+
+            // the user inputs
+            let algorithm_DOM = document.getElementById("algorithm");
+            let shuffle_btn = document.getElementById("shuffle");
+            let sort_btn = document.getElementById("sort");
+            
+            // output
+            let num_of_comparisons = 0;
+            let comparison_DOM = document.getElementById("comparisons");
+
+
+            // init array and trackers
+            let main_array = []
+            let red_idxs = []
+            let algorithm = ""
+            let counter = 0
+
+            for (let i = 0; i < HEIGHT; i++) {
+                main_array[i] = i
+                
+            }
+
+            //Basic functions
+                function clear(){
+                    ctx.fillStyle = "black";
+                    ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                }
+
+                function drawBar(x,width,height,color="white"){
+                    ctx.fillStyle = color
+                    ctx.fillRect(x,HEIGHT-height,width,height)
+                }
+                
+                function swap(arr,i,j){
+                    let temp = arr[i]
+                    arr[i] = arr[j]
+                    arr[j] = temp 
+                }
+
+            //complex drawing functions
+                function draw_main(arr, red_idxs = []){
+                    for(let i=0; i<arr.length; i++){
+                        // draw arr, color red if needed
+                        drawBar(i,1,arr[i], red_idxs.indexOf(i) == -1 ? "white" : "red")
+                    }
+                }
+            
+            //event listeners
+            shuffle_btn.addEventListener("click",(event)=>{
+                event.preventDefault();
+                algorithm = "shuffle";
+                console.log("ya")
+            })
+
+            function draw(){
+                // main function
+                clear()
+                draw_main(main_array,red_idxs)
+
+                if (algorithm == "shuffle") {
+                    shuffle()
+                }
+            }
+
+            // algorithms
+            function shuffle(){
+                red_idxs = []
+
+                    for(let i =0; i<100; i++){
+                        let first = Math.round(Math.random() * (main_array.length-1))
+                        let second = Math.round(Math.random() * (main_array.length-1))
+                        red_idxs = [...red_idxs,first,second]
+                        swap(main_array,first,second)
+                        counter++
+                    }
+                    
+
+                    if(counter > 1000){
+                        algorithm = ""
+                        counter = 0
+                        red_idxs = []
+                    }
+            }
+
+            setInterval(draw, 100);
+        </script>
     </body>
 </html>
