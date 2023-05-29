@@ -157,6 +157,9 @@
                     if(algorithm == "selection") {
                         for(let n=0; n<1000;n++) selection()
                     }
+                    if(algorithm == "radix"){
+                        radix()
+                    }
                 }
 
                 comparison_DOM.innerText = num_of_comparisons
@@ -189,7 +192,6 @@
             let swaps_num = 0
 
             function bubble(){
-                console.log(i)
                 if(i >= last_item){
                     i=0;
                     num_of_comparisons += 1
@@ -222,7 +224,6 @@
             let position_of_max = main_array.length-1
 
             function selection(){
-                console.log(selection_idx,selection_max )
                 if(main_array[selection_idx] > selection_max){
                     selection_max = main_array[selection_idx]
                     max_idx = selection_idx
@@ -245,9 +246,46 @@
                 if (position_of_max == 0) {
                     algorithm = ""
                     sorted = true
-                    
+
                 }
             }
+            
+            // radix
+            // we need to do a transition from old array to new array
+            const MAX_ITERATIONS = Math.ceil(Math.log2(Math.max(...main_array)))
+            let radix_iteration = 0
+            let radix_counter = 0
+            function radix(){
+                if(radix_iteration >= MAX_ITERATIONS){
+                    algorithm = ""
+                    sorted = true
+                    red_idxs = []
+                }
+                let zeros = []
+                let ones = []
+                if(radix_counter % 5 == 0){
+                    red_idxs = []
+                    for(let idx=0; idx<main_array.length;idx++){
+                        if(main_array[idx] & 1<<radix_iteration){
+                            ones.push(main_array[idx])
+                        }
+                        else{
+                            red_idxs.push(idx)
+                            zeros.push(main_array[idx])
+                        }
+                    }
+                    main_array = [...zeros,...ones]
+                    radix_iteration +=1
+                    
+                }
+
+                radix_counter++
+                
+
+                
+
+            }
+            
             setInterval(draw, 100);
         </script>
     </body>
