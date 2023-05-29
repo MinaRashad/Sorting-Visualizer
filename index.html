@@ -255,6 +255,8 @@
             const MAX_ITERATIONS = Math.ceil(Math.log2(Math.max(...main_array)))
             let radix_iteration = 0
             let radix_counter = 0
+            let radix_arr = []
+            let radix_switch_idx = 0
             function radix(){
                 if(radix_iteration >= MAX_ITERATIONS){
                     algorithm = ""
@@ -263,28 +265,39 @@
                 }
                 let zeros = []
                 let ones = []
-                if(radix_counter % 5 == 0){
-                    red_idxs = []
+                if(radix_arr.length == 0){
                     for(let idx=0; idx<main_array.length;idx++){
                         if(main_array[idx] & 1<<radix_iteration){
                             ones.push(main_array[idx])
                         }
                         else{
-                            red_idxs.push(idx)
                             zeros.push(main_array[idx])
                         }
                     }
-                    main_array = [...zeros,...ones]
+                    radix_arr = [...zeros,...ones]
                     radix_iteration +=1
+                }
+
+                // animation swapping the radix arr and main arr
+                if(radix_switch_idx > main_array.length-1){
+                    radix_arr = []
+                    radix_switch_idx = 0
+                }
+                else{
+                    red_idxs = []
+                    for(let n=0; n<100; n++){
+                        if(radix_switch_idx > main_array.length-1) break
+                        main_array[radix_switch_idx] = radix_arr[radix_switch_idx]
+                        red_idxs.push(radix_switch_idx)
+                        radix_switch_idx ++
+                    }
                     
                 }
 
-                radix_counter++
-                
-
-                
-
+                radix_counter++  
             }
+
+            
             
             setInterval(draw, 100);
         </script>
