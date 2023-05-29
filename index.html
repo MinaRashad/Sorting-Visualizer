@@ -90,6 +90,7 @@
                 main_array[i] = i
                 
             }
+            let restore_arr = JSON.parse(JSON.stringify(main_array))
 
             //Basic functions
                 function clear(){
@@ -119,12 +120,20 @@
             //event listeners
             shuffle_btn.addEventListener("click",(event)=>{
                 event.preventDefault();
+
+                if(algorithm == "radix"){
+                    // make sure ,when radix and any algorithm who
+                    // has an animated switch, the array has
+                    // all values
+                    main_array = [...restore_arr]
+
+                }
+                
                 algorithm = "shuffle";
             })
 
             sort_btn.addEventListener("click",(event)=>{
                 event.preventDefault();
-                algorithm=algorithm_DOM.value
                 // do here resetings needed before changing algorithm
                 num_of_comparisons = 0
 
@@ -138,6 +147,15 @@
                 max_idx = -1
                 position_of_max = main_array.length-1
 
+                // radix
+                radix_iteration = 0
+                radix_counter = 0
+                radix_arr = []
+                radix_switch_idx = 0
+
+
+                // start aglorithm
+                algorithm=algorithm_DOM.value
 
 
             })
@@ -227,7 +245,7 @@
                 if(main_array[selection_idx] > selection_max){
                     selection_max = main_array[selection_idx]
                     max_idx = selection_idx
-
+                    red_idxs = []
                     num_of_comparisons += 1
                 }
 
@@ -239,7 +257,9 @@
                     selection_max = -Infinity;
                     selection_idx = 0;
                     max_idx = -1
+                    num_of_comparisons += 1
                 }else{
+                    num_of_comparisons += 1
                     selection_idx +=1
                 }
 
@@ -258,7 +278,7 @@
             let radix_arr = []
             let radix_switch_idx = 0
             function radix(){
-                if(radix_iteration >= MAX_ITERATIONS){
+                if(radix_iteration >= MAX_ITERATIONS+1){
                     algorithm = ""
                     sorted = true
                     red_idxs = []
@@ -275,6 +295,7 @@
                         }
                     }
                     radix_arr = [...zeros,...ones]
+                    restore_arr= [...zeros,...ones]
                     radix_iteration +=1
                 }
 
