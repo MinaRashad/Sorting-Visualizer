@@ -109,12 +109,12 @@
                 }
 
             //complex drawing functions
-                function draw_main(arr, red_idxs = []){
-                    for(let i=0; i<arr.length; i++){
-                        // draw arr, color red if needed
-                        drawBar(i,1,arr[i], red_idxs.indexOf(i) == -1 ? "white" : "red")
-                    }
+            function draw_main(arr, red_idxs = []){
+                for(let i=0; i<arr.length; i++){
+                    // draw arr, color red if needed
+                    drawBar(i,1,arr[i], red_idxs.indexOf(i) == -1 ? "white" : "red")
                 }
+            }
             
             //event listeners
             shuffle_btn.addEventListener("click",(event)=>{
@@ -125,6 +125,21 @@
             sort_btn.addEventListener("click",(event)=>{
                 event.preventDefault();
                 algorithm=algorithm_DOM.value
+                // do here resetings needed before changing algorithm
+                num_of_comparisons = 0
+
+                //bubble
+                i=0, last_item = main_array.length-1
+                swaps_num = 0
+
+                //selection
+                selection_max = -Infinity;
+                selection_idx = 0;
+                max_idx = -1
+                position_of_max = main_array.length-1
+
+
+
             })
             
             // Main process
@@ -137,12 +152,12 @@
                 }
                 if(!sorted){
                     if(algorithm == "bubble"){
-                        for(let n=0; n<1000;n++) bubble()
+                        for(let n=0; n<100;n++) bubble()
+                    }
+                    if(algorithm == "selection") {
+                        for(let n=0; n<1000;n++) selection()
                     }
                 }
-
-
-
 
                 comparison_DOM.innerText = num_of_comparisons
             }
@@ -197,6 +212,41 @@
                 }
                 i+=1
                 red_idxs = [i,i+1]
+            }
+            
+            // selection sort
+            // variables
+            let selection_idx = 0;
+            let selection_max = -Infinity;
+            let max_idx = -1
+            let position_of_max = main_array.length-1
+
+            function selection(){
+                console.log(selection_idx,selection_max )
+                if(main_array[selection_idx] > selection_max){
+                    selection_max = main_array[selection_idx]
+                    max_idx = selection_idx
+
+                    num_of_comparisons += 1
+                }
+
+                red_idxs = [selection_idx, max_idx]
+
+                if(selection_idx >= position_of_max){
+                    swap(main_array, position_of_max, max_idx)
+                    position_of_max -= 1
+                    selection_max = -Infinity;
+                    selection_idx = 0;
+                    max_idx = -1
+                }else{
+                    selection_idx +=1
+                }
+
+                if (position_of_max == 0) {
+                    algorithm = ""
+                    sorted = true
+                    
+                }
             }
             setInterval(draw, 100);
         </script>
