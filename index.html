@@ -34,13 +34,13 @@
         <form id="form">
             
             <label>Sorting Algorithm</label>
-            <select id="algorithm"">
+            <select id="algorithm">
                 <option value="bubble">Bubble Sort</option>
                 <option value="insertion">Insertion Sort</option>
                 <option value="selection">Selection Sort</option>
-                <option value="merge">Merge Sort</option>
+                <!-- <option value="merge">Merge Sort</option> -->
                 <option value="quick">Quick Sort</option>
-                <option value="heap">Heap Sort</option>
+                <!-- <option value="heap">Heap Sort</option> -->
                 <option value="radix">Radix Sort (Binary)</option>
             </select><br>
             <button id="shuffle">
@@ -190,7 +190,7 @@
                         for(let n=0; n<100;n++) insertion()
                     }
                     if(algorithm == "quick"){
-                        for(let n=0; n<100;n++)quick_sort()
+                        for(let n=0; n<100;n++) quick_sort()
                     } 
                     if(algorithm == "radix")radix()
 
@@ -337,17 +337,19 @@
                 let pivot = current_pair[1]
                 let pivotValue = main_array[pivot]
 
-                red_idxs = [quick_idx,pivotIdx,...current_pair]
+                // red_idxs = [quick_idx,pivotIdx,...current_pair]
                 if (quick_idx <= pivot) {
                     num_of_comparisons += 2
                     if (main_array[quick_idx] < pivotValue) {
                         swap(main_array,pivotIdx,quick_idx)
                          pivotIdx++
+                         red_idxs.push(pivotIdx)
 
                     }  
                     quick_idx++
                 }
                 else{
+                    red_idxs=[]
                     swap(main_array,pivot,pivotIdx)
                     
                     // put the pivot in the correct place
@@ -360,14 +362,14 @@
                     }
                     if(pivots[j] != pivotIdx) pivots = [...pivots.slice(0,j),pivotIdx,...pivots.slice(j)]
                     
-                    let start1 = pivots[j-1]+1 || 0
+                    let start1 = pivots[j-1] || 0
                     let end1 = pivots[j]-1
 
-                    if(start1 < end1 ) start_end_pairs.push([start1,end1])
+                    if(start1+1 < end1 ) start_end_pairs.push([start1,end1])
 
                     let start2 = pivots[j]+1
-                    let end2 = pivots[j+1]-1 || main_array.length-1
-                    if(start2 < end2) start_end_pairs.push([start2,end2])
+                    let end2 = pivots[j+1] || main_array.length-1
+                    if(start2 < end2-1) start_end_pairs.push([start2,end2])
                     
                     /* The part above has nothing to do with algorithm, it is just to visulaise*/
                     /* It is usually done with recursion, so there is no need to do all this*/
