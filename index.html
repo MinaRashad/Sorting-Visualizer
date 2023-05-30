@@ -147,11 +147,17 @@
                 max_idx = -1
                 position_of_max = main_array.length-1
 
+                //insertion
+
+                insertion_head = 1
+                to_insert_element = 1
+
                 // radix
                 radix_iteration = 0
                 radix_counter = 0
                 radix_arr = []
                 radix_switch_idx = 0
+
 
 
                 // start aglorithm
@@ -173,11 +179,14 @@
                         for(let n=0; n<100;n++) bubble()
                     }
                     if(algorithm == "selection") {
-                        for(let n=0; n<1000;n++) selection()
+                        for(let n=0; n<100;n++) selection()
                     }
-                    if(algorithm == "radix"){
-                        radix()
+                    if (algorithm == "insertion"){
+                        for(let n=0; n<100;n++) insertion()
                     }
+                    if(algorithm == "radix")radix()
+
+                    
                 }
 
                 comparison_DOM.innerText = num_of_comparisons
@@ -270,6 +279,44 @@
                 }
             }
             
+            //insertion
+
+            let insertion_head = 1
+            let to_insert_element = 1
+
+            function insertion(){
+                // go the head
+                // if element less that previous swap
+                // keep swapping until previous element is less
+                // or we are at 0 idx
+                // then increase head by 1 and repeat step 1
+                if(insertion_head != main_array.length){
+                    if(to_insert_element == 0){
+                        insertion_head += 1
+                        to_insert_element = insertion_head
+                    }
+
+
+                    let current = main_array[to_insert_element]
+                    let previous = main_array[to_insert_element-1]
+
+                    if (current >= previous) {
+                        num_of_comparisons +=1
+                        insertion_head += 1
+                        to_insert_element = insertion_head
+                    }
+                    else{
+                        num_of_comparisons +=1
+                        swap(main_array,to_insert_element,to_insert_element-1)
+                        to_insert_element -= 1
+                    }
+
+                    red_idxs = [to_insert_element,insertion_head]
+            }
+                
+            }
+
+
             // radix
             // we need to do a transition from old array to new array
             const MAX_ITERATIONS = Math.ceil(Math.log2(Math.max(...main_array)))
